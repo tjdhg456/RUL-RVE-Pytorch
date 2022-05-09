@@ -10,6 +10,7 @@ torch.manual_seed(seed)
 class Encoder(nn.Module):
     def __init__(self, input_dim=5, hidden_dim=300, latent_dim=2):
         super(Encoder, self).__init__()
+        self.hidden_dim = hidden_dim
         self.lstm = nn.LSTM(input_size=input_dim, hidden_size=hidden_dim, bidirectional=True)
         self.fc_mu = nn.Linear(hidden_dim * 2, latent_dim)
         self.fc_var = nn.Linear(hidden_dim * 2, latent_dim)
@@ -17,7 +18,7 @@ class Encoder(nn.Module):
         
     def forward(self, x):
         h, _ = self.lstm(x)
-        feat = h[:, -1, :]
+        feat = torch.cat([h[:, -1, :self.hidden_dim], h[:, 0, self.hidden_dim:]], dim=-1)
         
         # Sample mu and var
         mu = self.fc_mu(feat)

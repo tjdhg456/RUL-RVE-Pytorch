@@ -1,0 +1,1 @@
+python main.py --save_dir ./checkpoint/FD001/base_lr0.01 --dataset FD001 --lr 0.001 --device cuda:0
