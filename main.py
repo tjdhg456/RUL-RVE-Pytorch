@@ -81,8 +81,8 @@ if __name__ == "__main__":
 			out = decoder(z).view(-1)
 
 			kl_loss = torch.mean(-0.5 * torch.sum(1 + var - mu ** 2 - var.exp(), dim = 1), dim = 0)
-			mse_loss = F.mse_loss(out, tr_y)
-			loss = kl_loss + mse_loss
+			rmse_loss = torch.sqrt(F.mse_loss(out, tr_y) + 1e-6)
+			loss = kl_loss + rmse_loss
 			loss.backward()
 			optimizer.step()
    
